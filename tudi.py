@@ -135,7 +135,7 @@ class Music:
 class Game:
     def __init__(self):
         self.version = "1.02"
-        self.levelNr = 13
+        self.levelNr = 28
         self.totalScore = 0
         self.level = None
         self.scaleFactor = 1

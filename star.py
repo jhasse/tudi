@@ -20,6 +20,11 @@ class Star:
             self.red = 255
             self.green = 0
             self.blue = 0
+        if color == "green":
+            self.score = 5
+            self.red = 0
+            self.green = 255
+            self.blue = 0
         self.exploding = False
         self.dead = False
         self.explodeTimeout = 0
