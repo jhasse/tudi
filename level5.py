@@ -6,10 +6,11 @@ class Level(LevelBase):
     def __init__(self):
         LevelBase.__init__(self)
         self.stars = []
-        for x in range(170, 770, 320):
-            self.stars.append(Star(x, 250))
-            self.stars.append(Star(x + 160, 250, "blue"))
-        for x in range(170, 770, 160):
-            self.stars.append(Star(x, 400, "red"))
+        for y in range(250, 450, 80):
+            self.stars.append(Star(200, y, "blue"))
+            self.stars.append(Star(280, y, "blue"))
+            self.stars.append(Star(500, y, "red"))
+            self.stars.append(Star(580, y, "red"))
     def drawHints(self):
-        jngl.Print("Be careful. You can't proceed to the next\nlevel with a negative score.", 180, 170)
+        jngl.Print("<-- Your points collected\n    in this level", 195, 10)
+        jngl.Print("You can affort to touch a red star\nif you have at least 10 points left.", 155, 135)

@@ -1,30 +1,20 @@
 from star import Star
 from levelbase import LevelBase
 import jngl
-import math
 
 class Level(LevelBase):
     def __init__(self):
         LevelBase.__init__(self)
         self.stars = []
-        self.centerX = 450
-        self.centerY = 220
-        i = 0
-        while i < math.pi * 2:
-            self.stars.append(Star(self.centerX + 200 * math.sin(i),
-                                   self.centerY + 200 * math.cos(i)))
-            i += math.pi / 6
-            self.stars.append(Star(self.centerX + 200 * math.sin(i),
-                                   self.centerY + 200 * math.cos(i), "blue"))
-            i += math.pi / 6
-            self.stars.append(Star(self.centerX + 200 * math.sin(i),
-                                   self.centerY + 200 * math.cos(i), "red"))
-            i += math.pi / 6
-    def drawHints(self):
-        jngl.Print("You know what to do.", 310, 210)
-    def step(self):
-        for star in self.stars:
-            x = star.x - self.centerX
-            y = star.y - self.centerY
-            star.x = x * math.cos(0.01) - y * math.sin(0.01) + self.centerX
-            star.y = y * math.cos(0.01) + x * math.sin(0.01) + self.centerY
+        for x in range(170, 770, 80):
+            for y in range(250, 430, 80):
+                if x == 250 and y == 250:
+                    self.stars.append(Star(x, y, "red"))
+                elif x == 490 and y == 410:
+                    self.stars.append(Star(x, y, "red"))
+                elif x == 650 and y == 250:
+                    self.stars.append(Star(x, y, "red"))
+                elif x == 170 and y == 250:
+                    self.stars.append(Star(x, y, "blue"))
+                else:
+                    self.stars.append(Star(x, y))

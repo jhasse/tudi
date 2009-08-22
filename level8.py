@@ -15,13 +15,11 @@ class Level(LevelBase):
                                    self.centerY + 200 * math.cos(i)))
             i += math.pi / 6
             self.stars.append(Star(self.centerX + 200 * math.sin(i),
-                                   self.centerY + 200 * math.cos(i)))
+                                   self.centerY + 200 * math.cos(i), "blue"))
             i += math.pi / 6
             self.stars.append(Star(self.centerX + 200 * math.sin(i),
                                    self.centerY + 200 * math.cos(i), "red"))
             i += math.pi / 6
-    def drawHints(self):
-        jngl.Print("Once again.", 360, 210)
     def step(self):
         for star in self.stars:
             x = star.x - self.centerX

@@ -73,7 +73,7 @@ class Star:
             if self.explodeTimeout >= 100:
                 self.dead = True
             return False
-        if (player.x - self.x) * (player.x - self.x) + (player.y - self.y) * (player.y - self.y) < (self.size + player.size) / 2 * (self.size + player.size) / 2:
+        if (player.x - self.x) * (player.x - self.x) + (player.y - self.y) * (player.y - self.y) < (self.size + player.size) / 2 * (self.size + player.size) / 2 and not player.exploding:
             return True
         return False
 

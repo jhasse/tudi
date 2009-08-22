@@ -13,7 +13,10 @@ class LevelBase:
         for star in self.stars:
             if star.checkCollision(player):
                 self.score += star.score
-                star.explode()
+                if self.score < 0:
+                    player.explode()
+                else:
+                    star.explode()
         for star in self.stars:
             if star.dead:
                 self.stars.remove(star)

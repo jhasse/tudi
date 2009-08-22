@@ -11,3 +11,4 @@ class Level(LevelBase):
                 self.stars.append(Star(x, y))
     def drawHints(self):
         jngl.Print("For each star you collect you'll get one point.", 155, 170)
+        jngl.Print("GO -->", 680, 270)

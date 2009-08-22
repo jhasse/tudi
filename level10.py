@@ -12,10 +12,10 @@ class Level(LevelBase):
         i = 0
         while i < math.pi * 2:
             self.stars.append(Star(self.centerX + 200 * math.sin(i),
-                                   self.centerY + 200 * math.cos(i)))
+                                   self.centerY + 200 * math.cos(i), "red"))
             i += math.pi / 6
             self.stars.append(Star(self.centerX + 200 * math.sin(i),
-                                   self.centerY + 200 * math.cos(i), "red"))
+                                   self.centerY + 200 * math.cos(i)))
             i += math.pi / 6
     def step(self):
         for star in self.stars:
