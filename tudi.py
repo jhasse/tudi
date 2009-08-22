@@ -68,17 +68,20 @@ class Player:
 
 class Game:
     def __init__(self):
-        self.levelNr = 5
+        self.version = "1.0"
+        self.levelNr = 1
         self.totalScore = 0
         self.level = None
         self.scaleFactor = 1
         self.windowWidth = 800
         self.windowHeight = 480
-        jngl.ShowWindow("tudi", int(self.windowWidth * self.scaleFactor), int(self.windowHeight * self.scaleFactor))
+        jngl.ShowWindow("Tudi {0} - Copyright 2009 Jan Niklas Hasse - http://watteimdocht.de/tudi".format(self.version),
+                        int(self.windowWidth * self.scaleFactor), int(self.windowHeight * self.scaleFactor))
         jngl.SetBackgroundColor(0, 0, 0)
         jngl.SetFont('victor-pixel.ttf')
         jngl.SetFontSize(16)
         jngl.SetFontColor(255, 255, 255)
+        jngl.SetAntiAliasing(True)
 
         while not jngl.KeyPressed(jngl.key.Any) and jngl.Running():
             jngl.Scale(self.scaleFactor)
@@ -103,6 +106,8 @@ class Game:
         lastTime = jngl.Time()
         needDraw = True
         timePerStep = 0.01
+        counter = 0
+        fps = 0
         while jngl.Running():
             if jngl.Time() - lastTime > timePerStep:
                 lastTime += timePerStep
@@ -125,6 +130,13 @@ class Game:
 
                 text = "Total Score: {0}".format(self.totalScore)
                 jngl.Print(text, int(self.windowWidth - 10 - jngl.GetTextWidth(text)), 10)
+
+                fps += jngl.FPS() / 50
+                counter -= 1
+                if counter < 0:
+                    counter = 50
+                    jngl.SetTitle("Tudi {4} - Level: {0} - Score: {1} - Total Score {2} - FPS: {3}".format(self.levelNr, self.level.getScore(), self.totalScore, int(fps), self.version))
+                    fps = 0
 
                 jngl.SwapBuffers()
             else:
