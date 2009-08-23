@@ -1,4 +1,4 @@
-import jngl
+﻿import jngl
 
 class Player:
     def __init__(self, game):
@@ -12,7 +12,7 @@ class Player:
         self.exploding = False
         self.explodeTimeout = 50 # Fade in level
         self.dead = False
-    def move(self):
+    def move(self, game):
         if self.exploding:
             self.explodeTimeout += 1
             if self.explodeTimeout > 100:
@@ -26,14 +26,29 @@ class Player:
                 self.xspeed -= 0.2
             self.yspeed += 0.2
             self.xspeed *= 0.97
+
             self.x += self.xspeed
+            if game.level.checkCollision(self):
+                self.x -= self.xspeed
+                self.xspeed = -self.xspeed
+
             self.y += self.yspeed
+            if game.level.checkCollision(self):
+                self.y -= self.yspeed
+                if self.yspeed > 0:
+                    self.jump(game)
+                else:
+                    self.yspeed = -self.yspeed
+
             if self.y + self.size / 2 > self.windowHeight:
                 self.y = self.windowHeight - self.size / 2
-                self.yspeed = -10
+                self.jump(game)
             if self.x - self.size / 2 < 0 and self.xspeed < 0:
                 self.xspeed = -self.xspeed
                 self.x = self.size / 2
+    def jump(self, game):
+        self.yspeed = -10
+        game.moveCamera = self.windowHeight - self.y - 100
     def explode(self):
         self.exploding = True
     def draw(self):
@@ -68,8 +83,8 @@ class Player:
 
 class Game:
     def __init__(self):
-        self.version = "1.0"
-        self.levelNr = 1
+        self.version = "1.01"
+        self.levelNr = 20
         self.totalScore = 0
         self.level = None
         self.scaleFactor = 1
@@ -83,7 +98,7 @@ class Game:
         jngl.SetFontColor(255, 255, 255)
         jngl.SetAntiAliasing(True)
 
-        while not jngl.KeyPressed(jngl.key.Any) and jngl.Running():
+        while not jngl.KeyPressed(jngl.key.Any) and jngl.Running() and False:
             jngl.Scale(self.scaleFactor)
             jngl.Draw("crap.png", 240, 100)
             text = "Press any key"
@@ -103,6 +118,8 @@ class Game:
         self.player = Player(self)
 
     def run(self):
+        camera = 0
+        self.moveCamera = 0
         lastTime = jngl.Time()
         needDraw = True
         timePerStep = 0.01
@@ -112,19 +129,29 @@ class Game:
             if jngl.Time() - lastTime > timePerStep:
                 lastTime += timePerStep
                 needDraw = True
-                self.player.move()
+                self.player.move(self)
                 self.level.checkStars(self.player)
                 if self.player.x - self.player.size / 2 > self.windowWidth or self.player.dead:
                     self.loadNextLevel()
                 self.level.step()
+                if (self.player.y - self.windowHeight) + camera > 0:
+                    newMoveCamera = self.windowHeight - self.player.y - 100
+                    if newMoveCamera < self.moveCamera:
+                        self.moveCamera = newMoveCamera
+                if self.moveCamera < 0:
+                    self.moveCamera = 0
+                camera += (self.moveCamera - camera) / 30
 
             elif needDraw:
                 needDraw = False
 
                 jngl.Scale(self.scaleFactor)
-                self.level.drawStars()
+                jngl.PushMatrix()
+                jngl.Translate(0, int(camera))
+                self.level.draw()
                 self.level.drawHints()
                 self.player.draw()
+                jngl.PopMatrix()
 
                 jngl.Print("#{1}  Score: {0}".format(self.level.getScore(), self.levelNr), 10, 10)
 

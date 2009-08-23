@@ -2,11 +2,14 @@ class LevelBase:
     def __init__(self):
         self.score = 0
         self.stars = []
+        self.boxes = []
     def getScore(self):
         return self.score
-    def drawStars(self):
+    def draw(self):
         for star in self.stars:
             star.draw()
+        for box in self.boxes:
+            box.draw()
     def drawHints(self):
         pass
     def checkStars(self, player):
@@ -20,5 +23,10 @@ class LevelBase:
         for star in self.stars:
             if star.dead:
                 self.stars.remove(star)
+    def checkCollision(self, player):
+        for box in self.boxes:
+            if box.checkCollision(player):
+                return True
+        return False
     def step(self):
         pass
