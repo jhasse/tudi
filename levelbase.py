@@ -26,6 +26,8 @@ class LevelBase:
     def checkCollision(self, player):
         for box in self.boxes:
             if box.checkCollision(player):
+                player.x += box.xspeed * 2
+                player.y += box.yspeed * 2
                 return True
         return False
     def step(self):

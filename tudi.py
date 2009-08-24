@@ -1,5 +1,10 @@
 ﻿import jngl
-import jnal
+try:
+    import jnal
+except:
+    import os
+    os.system("oalinst.exe")
+    import jnal
 import os
 
 class Player:
@@ -111,24 +116,21 @@ class Music:
     def draw(self):
         if self.drawTimeout > 0:
             self.drawTimeout -= 1
-            jngl.SetColor(0, 0, 0)
             jngl.SetFontColor(255, 255, 255)
             if self.drawTimeout > 300:
-                jngl.SetColor(0, 0, 0, 555 - self.drawTimeout)
                 jngl.SetFontColor(255, 255, 255, 555 - self.drawTimeout)
             if self.drawTimeout < 255:
-                jngl.SetColor(0, 0, 0, self.drawTimeout)
                 jngl.SetFontColor(255, 255, 255, self.drawTimeout)
             text = "Now playing: {0[1]} by {0[0]}".format(self.songs[self.currentSong])
-            jngl.DrawRect(10, 440, jngl.GetTextWidth(text) + 20, 30)
             jngl.Print(text, 20, 445)
+            jngl.SetFontColor(255, 255, 255)
     def togglePlaying(self):
         self.playing = not self.playing
 
 class Game:
     def __init__(self):
         self.version = "1.01"
-        self.levelNr = 19
+        self.levelNr = 1
         self.totalScore = 0
         self.level = None
         self.scaleFactor = 1
@@ -156,7 +158,6 @@ class Game:
             if self.music == None:
                 self.music = Music()
 
-        self.music.next()
         self.loadNextLevel() # load level 1
 
     def getLevel(self):
@@ -210,7 +211,6 @@ class Game:
                 self.player.draw()
                 jngl.PopMatrix()
 
-                jngl.SetFontColor(255, 255, 255)
                 jngl.Print("#{1}  Score: {0}".format(self.level.getScore(), self.levelNr), 10, 10)
 
                 text = "Total Score: {0}".format(self.totalScore)

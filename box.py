@@ -4,12 +4,16 @@ class Box:
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
+        self.xspeed = 0
+        self.yspeed = 0
         self.width = width
         self.height = height
     def draw(self):
         jngl.SetColor(200, 200, 200)
         jngl.DrawRect(self.x, self.y, self.width, self.height)
     def checkCollision(self, player):
+        self.x += self.xspeed
+        self.y += self.yspeed
         left1 = self.x
         left2 = player.x - player.size / 2
         right1 = self.x + self.width
