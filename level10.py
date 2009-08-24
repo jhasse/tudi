@@ -6,16 +6,19 @@ import math
 class Level(LevelBase):
     def __init__(self):
         LevelBase.__init__(self)
-        self.stars = [Star(450, 220, "blue")]
+        self.stars = []
         self.centerX = 450
         self.centerY = 220
         i = 0
         while i < math.pi * 2:
             self.stars.append(Star(self.centerX + 200 * math.sin(i),
-                                   self.centerY + 200 * math.cos(i), "red"))
+                                   self.centerY + 200 * math.cos(i)))
             i += math.pi / 6
             self.stars.append(Star(self.centerX + 200 * math.sin(i),
                                    self.centerY + 200 * math.cos(i)))
+            i += math.pi / 6
+            self.stars.append(Star(self.centerX + 200 * math.sin(i),
+                                   self.centerY + 200 * math.cos(i), "red"))
             i += math.pi / 6
     def step(self):
         for star in self.stars:

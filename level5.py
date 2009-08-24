@@ -13,4 +13,4 @@ class Level(LevelBase):
             self.stars.append(Star(580, y, "red"))
     def drawHints(self):
         jngl.Print("<-- Your points collected\n    in this level", 195, 10)
-        jngl.Print("You can afford to touch a red star\nif you have at least 10 points left.", 155, 135)
+        jngl.Print("If you have at least 10 points left\nyou can afford to touch a red star.", 155, 135)

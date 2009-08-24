@@ -7,7 +7,7 @@ class Level(LevelBase):
     def __init__(self):
         LevelBase.__init__(self)
         self.stars = []
-        for y in range(-360, 450, 80):
+        for y in range(-760, 450, 80):
             self.stars.append(Star(730, y, "red"))
         for x in range(40, 300, 80):
             self.stars.append(Star(x, -300, "blue"))

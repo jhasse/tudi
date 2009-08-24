@@ -57,6 +57,7 @@ class Player:
         self.yspeed = -10
         game.moveCamera = self.windowHeight - self.y - 100
     def explode(self):
+        jnal.Play("dead.ogg")
         self.exploding = True
     def draw(self):
         if self.exploding:
@@ -95,15 +96,18 @@ class Music:
     def __init__(self):
         self.playing = True
         self.songs = [ ("javagore", "Thornar"), ("deathstar", "jamendrock"), ("pornophonique", "sad robot") ]
+        return
         for song in self.songs:
             jnal.Load("music/{0}/{1}.ogg".format(song[0], song[1]))
         self.currentSong = -1
         self.drawTimeout = 0
     def step(self):
+        return
         song = self.songs[self.currentSong]
         if not jnal.IsPlaying("music/{0}/{1}.ogg".format(song[0], song[1])):
             self.next()
     def next(self):
+        return
         if self.playing:
             if self.currentSong >= 0:
                 jnal.Stop("music/{0[0]}/{0[1]}.ogg".format(self.songs[self.currentSong]))
@@ -114,6 +118,7 @@ class Music:
             jnal.Play("music/{0}/{1}.ogg".format(song[0], song[1]))
             self.drawTimeout = 555
     def draw(self):
+        return
         if self.drawTimeout > 0:
             self.drawTimeout -= 1
             jngl.SetFontColor(255, 255, 255)
@@ -129,8 +134,8 @@ class Music:
 
 class Game:
     def __init__(self):
-        self.version = "1.01"
-        self.levelNr = 1
+        self.version = "1.02"
+        self.levelNr = 13
         self.totalScore = 0
         self.level = None
         self.scaleFactor = 1
@@ -157,6 +162,8 @@ class Game:
             jngl.SwapBuffers()
             if self.music == None:
                 self.music = Music()
+                jnal.Load("dead.ogg")
+                jnal.Load("collect.ogg")
 
         self.loadNextLevel() # load level 1
 

@@ -1,4 +1,5 @@
 import jngl
+import jnal
 
 class Star:
     def __init__(self, x, y, color = "yellow"):
@@ -23,6 +24,7 @@ class Star:
         self.dead = False
         self.explodeTimeout = 0
     def explode(self):
+        jnal.Play("collect.ogg")
         self.exploding = True
     def draw(self):
         flash = int(jngl.Time() * 300 % 200)
@@ -52,7 +54,7 @@ class Star:
             jngl.DrawRect(-width / 6 + distance, -height / 6 + distance, width / 3, height / 3)
             jngl.DrawRect(-width / 6 + distance, -height / 6 - distance, width / 3, height / 3)
             jngl.SetFontColor(255, 255, 255, int(255 - self.explodeTimeout * 2.55))
-            jngl.Print("{0:+}".format(self.score), -20, int(-15 - self.explodeTimeout / 5))
+            jngl.Print("{0: >+3}".format(self.score), -23, int(-15 - self.explodeTimeout / 5))
             jngl.SetFontColor(255, 255, 255, 255)
         else:
             jngl.SetColor(255, 255, 255)
@@ -76,6 +78,3 @@ class Star:
         if (player.x - self.x) * (player.x - self.x) + (player.y - self.y) * (player.y - self.y) < (self.size + player.size) / 2 * (self.size + player.size) / 2 and not player.exploding:
             return True
         return False
-
-if __name__ == "__main__":
-    import splom
