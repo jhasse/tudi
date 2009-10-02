@@ -19,6 +19,8 @@ class Player:
         self.exploding = False
         self.explodeTimeout = 50 # Fade in level
         self.dead = False
+        self.canJump = False
+        self.nonstopJump = True
     def move(self, game):
         if self.exploding:
             self.explodeTimeout += 1
@@ -46,6 +48,8 @@ class Player:
                     self.jump(game)
                 else:
                     self.yspeed = -self.yspeed
+            else:
+                self.canJump = False
 
             if self.y + self.size / 2 > self.windowHeight:
                 self.y = self.windowHeight - self.size / 2
@@ -54,8 +58,12 @@ class Player:
                 self.xspeed = -self.xspeed
                 self.x = self.size / 2
     def jump(self, game):
-        self.yspeed = -10
-        game.moveCamera = self.windowHeight - self.y - 100
+        if self.nonstopJump or (jngl.KeyDown(jngl.key.Up)):
+            self.yspeed = -10
+            game.moveCamera = self.windowHeight - self.y - 100
+        else:
+            self.canJump = True
+            self.yspeed = 0
     def explode(self):
         jnal.Play("dead.ogg")
         self.exploding = True
@@ -66,7 +74,7 @@ class Player:
                 jngl.SetColor(0, 0, 0, int((self.explodeTimeout - 50) * 5.1))
                 jngl.PushMatrix()
                 jngl.Reset()
-                jngl.DrawRect(0, 0, self.windowWidth, self.windowHeight)
+                jngl.DrawRect(0, 0, jngl.GetWindowWidth(), jngl.GetWindowHeight())
                 jngl.PopMatrix()
             jngl.SetColor(255, 255, 255)
             jngl.PushMatrix()
@@ -96,18 +104,15 @@ class Music:
     def __init__(self):
         self.playing = True
         self.songs = [ ("javagore", "Thornar"), ("deathstar", "jamendrock"), ("pornophonique", "sad robot") ]
-        return
         for song in self.songs:
             jnal.Load("music/{0}/{1}.ogg".format(song[0], song[1]))
         self.currentSong = -1
         self.drawTimeout = 0
     def step(self):
-        return
         song = self.songs[self.currentSong]
         if not jnal.IsPlaying("music/{0}/{1}.ogg".format(song[0], song[1])):
             self.next()
     def next(self):
-        return
         if self.playing:
             if self.currentSong >= 0:
                 jnal.Stop("music/{0[0]}/{0[1]}.ogg".format(self.songs[self.currentSong]))
@@ -118,7 +123,6 @@ class Music:
             jnal.Play("music/{0}/{1}.ogg".format(song[0], song[1]))
             self.drawTimeout = 555
     def draw(self):
-        return
         if self.drawTimeout > 0:
             self.drawTimeout -= 1
             jngl.SetFontColor(255, 255, 255)
@@ -127,20 +131,25 @@ class Music:
             if self.drawTimeout < 255:
                 jngl.SetFontColor(255, 255, 255, self.drawTimeout)
             text = "Now playing: {0[1]} by {0[0]}".format(self.songs[self.currentSong])
-            jngl.Print(text, 20, 445)
+            jngl.Print(text, 10, 455)
             jngl.SetFontColor(255, 255, 255)
     def togglePlaying(self):
         self.playing = not self.playing
+        if self.playing:
+            self.next()
+        else:
+            jnal.Stop("music/{0[0]}/{0[1]}.ogg".format(self.songs[self.currentSong]))
 
 class Game:
     def __init__(self):
-        self.version = "1.02"
-        self.levelNr = 28
+        self.version = "1.03"
+        self.levelNr = 1
         self.totalScore = 0
         self.level = None
         self.scaleFactor = 1
         self.windowWidth = 800
         self.windowHeight = 480
+        self.player = Player(self)
         jngl.ShowWindow("Tudi {0} - Copyright 2009 Jan Niklas Hasse - http://watteimdocht.de/tudi".format(self.version),
                         int(self.windowWidth * self.scaleFactor), int(self.windowHeight * self.scaleFactor))
         jngl.SetBackgroundColor(0, 0, 0)
@@ -165,6 +174,12 @@ class Game:
                 jnal.Load("dead.ogg")
                 jnal.Load("collect.ogg")
 
+        self.highscore = 0
+        if os.path.exists("highscore"):
+            file = open("highscore")
+            self.highscore = int(file.read(4))
+            file.close()
+
         self.loadNextLevel() # load level 1
 
     def getLevel(self):
@@ -175,7 +190,9 @@ class Game:
             self.totalScore += self.level.getScore()
             self.levelNr += 1
         self.level = __import__('level{0}'.format(self.levelNr)).Level()
+        temp = self.player.nonstopJump
         self.player = Player(self)
+        self.player.nonstopJump = temp
         self.moveCamera = 0
         self.camera = 0
 
@@ -204,8 +221,13 @@ class Game:
                     self.moveCamera = 0
                 self.camera += (self.moveCamera - self.camera) / 30
 
-                if jngl.KeyPressed('n'):
-                    self.music.next()
+                if jngl.KeyPressed('m'):
+                    self.music.togglePlaying()
+                if jngl.KeyPressed('j') and self.levelNr == 1:
+                    self.player.nonstopJump = not self.player.nonstopJump
+                if jngl.KeyPressed('r') and self.levelNr == 37:
+                    self.levelNr = 0
+                    self.loadNextLevel()
 
             elif needDraw:
                 needDraw = False
@@ -225,11 +247,20 @@ class Game:
 
                 self.music.draw()
 
+                if self.levelNr == 37:
+                    if self.totalScore > self.highscore:
+                        self.highscore = self.totalScore
+                        file = open("highscore", "w")
+                        file.write(str(self.highscore))
+                        file.close()
+
+                    jngl.Print("Your Highscore:\n{0: >4}".format(self.highscore), 580, 405)
+
                 fps += jngl.FPS() / 50
                 counter -= 1
                 if counter < 0:
                     counter = 50
-                    jngl.SetTitle("Tudi {4} - Level: {0} - Score: {1} - Total Score {2} - FPS: {3}".format(self.levelNr, self.level.getScore(), self.totalScore, int(fps), self.version))
+                    jngl.SetTitle("Tudi {0} - Highscore: {1} - FPS: {2}".format(self.version, self.highscore, int(fps)))
                     fps = 0
 
                 jngl.SwapBuffers()
