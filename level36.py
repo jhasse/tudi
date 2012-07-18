@@ -30,4 +30,4 @@ class Level(LevelBase):
             if box.x < 50:
                 self.moveLeft = False
     def drawHints(self):
-        jngl.Print("Last level!", 170, 285)
+        jngl.print("Last level!", 170, 285)

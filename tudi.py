@@ -1,10 +1,6 @@
 ﻿import jngl
-try:
-    import jnal
-except:
-    import os
+if not jngl.isOpenALInstalled():
     os.system("oalinst.exe")
-    import jnal
 import os
 
 class Player:
@@ -29,9 +25,9 @@ class Player:
         else:
             if self.explodeTimeout > 0:
                 self.explodeTimeout -= 1 # Fade in
-            if jngl.KeyDown(jngl.key.Right):
+            if jngl.keyDown(jngl.key.Right):
                 self.xspeed += 0.2
-            if jngl.KeyDown(jngl.key.Left):
+            if jngl.keyDown(jngl.key.Left):
                 self.xspeed -= 0.2
             self.yspeed += 0.2
             self.xspeed *= 0.97
@@ -58,46 +54,46 @@ class Player:
                 self.xspeed = -self.xspeed
                 self.x = self.size / 2
     def jump(self, game):
-        if self.nonstopJump or (jngl.KeyDown(jngl.key.Up)):
+        if self.nonstopJump or (jngl.keyDown(jngl.key.Up)):
             self.yspeed = -10
             game.moveCamera = self.windowHeight - self.y - 100
         else:
             self.canJump = True
             self.yspeed = 0
     def explode(self):
-        jnal.Play("dead.ogg")
+        jngl.play("dead.ogg")
         self.exploding = True
     def draw(self):
         if self.exploding:
             if self.explodeTimeout > 50:
                 # Fade out level
-                jngl.SetColor(0, 0, 0, int((self.explodeTimeout - 50) * 5.1))
-                jngl.PushMatrix()
-                jngl.Reset()
-                jngl.DrawRect(0, 0, jngl.GetWindowWidth(), jngl.GetWindowHeight())
-                jngl.PopMatrix()
-            jngl.SetColor(255, 255, 255)
-            jngl.PushMatrix()
-            jngl.Translate(self.x, self.y)
+                jngl.setColor(0, 0, 0, int((self.explodeTimeout - 50) * 5.1))
+                jngl.pushMatrix()
+                jngl.reset()
+                jngl.drawRect(-jngl.getWindowWidth()/2, -jngl.getWindowHeight()/2, jngl.getWindowWidth(), jngl.getWindowHeight())
+                jngl.popMatrix()
+            jngl.setColor(255, 255, 255)
+            jngl.pushMatrix()
+            jngl.translate(self.x, self.y)
             width = self.size / 2 - self.explodeTimeout / 4
             height = self.size / 2 - self.explodeTimeout / 4
             distance = self.explodeTimeout / 2 + self.size / 4
-            jngl.DrawRect(-width / 2 - distance, -height / 2 - distance, width, height)
-            jngl.DrawRect(-width / 2 - distance, -height / 2 + distance, width, height)
-            jngl.DrawRect(-width / 2 + distance, -height / 2 + distance, width, height)
-            jngl.DrawRect(-width / 2 + distance, -height / 2 - distance, width, height)
-            jngl.PopMatrix()
+            jngl.drawRect(-width / 2 - distance, -height / 2 - distance, width, height)
+            jngl.drawRect(-width / 2 - distance, -height / 2 + distance, width, height)
+            jngl.drawRect(-width / 2 + distance, -height / 2 + distance, width, height)
+            jngl.drawRect(-width / 2 + distance, -height / 2 - distance, width, height)
+            jngl.popMatrix()
         else:
             if self.explodeTimeout != 0:
                 # Fade in level
-                jngl.SetColor(0, 0, 0, int(self.explodeTimeout * 5.1))
-                jngl.DrawRect(0, 0, self.windowWidth, self.windowHeight)
-            jngl.SetColor(255, 255, 255)
+                jngl.setColor(0, 0, 0, int(self.explodeTimeout * 5.1))
+                jngl.drawRect(0, 0, self.windowWidth, self.windowHeight)
+            jngl.setColor(255, 255, 255)
             width = self.size
             height = self.size
             height -= self.yspeed * 3
             width += self.yspeed * 0.8
-            jngl.DrawRect(self.x - width / 2, self.y - height / 2,
+            jngl.drawRect(self.x - width / 2, self.y - height / 2,
                           width, height)
 
 class Music:
@@ -105,44 +101,44 @@ class Music:
         self.playing = True
         self.songs = [ ("javagore", "Thornar"), ("deathstar", "jamendrock"), ("pornophonique", "sad robot") ]
         for song in self.songs:
-            jnal.Load("music/{0}/{1}.ogg".format(song[0], song[1]))
+            jngl.load("music/{0}/{1}.ogg".format(song[0], song[1]))
         self.currentSong = -1
         self.drawTimeout = 0
     def step(self):
         song = self.songs[self.currentSong]
-        if not jnal.IsPlaying("music/{0}/{1}.ogg".format(song[0], song[1])):
+        if not jngl.isPlaying("music/{0}/{1}.ogg".format(song[0], song[1])):
             self.next()
     def next(self):
         if self.playing:
             if self.currentSong >= 0:
-                jnal.Stop("music/{0[0]}/{0[1]}.ogg".format(self.songs[self.currentSong]))
+                jngl.stop("music/{0[0]}/{0[1]}.ogg".format(self.songs[self.currentSong]))
             self.currentSong += 1
             if self.currentSong >= len(self.songs):
                 self.currentSong = 0
             song = self.songs[self.currentSong]
-            jnal.Play("music/{0}/{1}.ogg".format(song[0], song[1]))
+            jngl.play("music/{0}/{1}.ogg".format(song[0], song[1]))
             self.drawTimeout = 555
     def draw(self):
         if self.drawTimeout > 0:
             self.drawTimeout -= 1
-            jngl.SetFontColor(255, 255, 255)
+            jngl.setFontColor(255, 255, 255)
             if self.drawTimeout > 300:
-                jngl.SetFontColor(255, 255, 255, 555 - self.drawTimeout)
+                jngl.setFontColor(255, 255, 255, 555 - self.drawTimeout)
             if self.drawTimeout < 255:
-                jngl.SetFontColor(255, 255, 255, self.drawTimeout)
+                jngl.setFontColor(255, 255, 255, self.drawTimeout)
             text = "Now playing: {0[1]} by {0[0]}".format(self.songs[self.currentSong])
-            jngl.Print(text, 10, 455)
-            jngl.SetFontColor(255, 255, 255)
+            jngl.print(text, 10, 455)
+            jngl.setFontColor(255, 255, 255)
     def togglePlaying(self):
         self.playing = not self.playing
         if self.playing:
             self.next()
         else:
-            jnal.Stop("music/{0[0]}/{0[1]}.ogg".format(self.songs[self.currentSong]))
+            jngl.stop("music/{0[0]}/{0[1]}.ogg".format(self.songs[self.currentSong]))
 
 class Game:
     def __init__(self):
-        self.version = "1.03"
+        self.version = "1.04"
         self.levelNr = 1
         self.totalScore = 0
         self.level = None
@@ -150,29 +146,30 @@ class Game:
         self.windowWidth = 800
         self.windowHeight = 480
         self.player = Player(self)
-        jngl.ShowWindow("Tudi {0} - Copyright 2009 Jan Niklas Hasse - http://watteimdocht.de/tudi".format(self.version),
+        jngl.showWindow("Tudi {0} - Copyright 2009 Jan Niklas Hasse - http://watteimdocht.de/tudi".format(self.version),
                         int(self.windowWidth * self.scaleFactor), int(self.windowHeight * self.scaleFactor))
-        jngl.SetBackgroundColor(0, 0, 0)
-        jngl.SetFont('victor-pixel.ttf')
-        jngl.SetFontSize(16)
-        jngl.SetFontColor(255, 255, 255)
-        jngl.SetAntiAliasing(True)
+        jngl.setBackgroundColor(0, 0, 0)
+        jngl.setFont('victor-pixel.ttf')
+        jngl.setFontSize(16)
+        jngl.setFontColor(255, 255, 255)
+        jngl.setAntiAliasing(True)
 
         self.music = None
 
-        while not jngl.KeyPressed(jngl.key.Any) and jngl.Running():
-            jngl.Scale(self.scaleFactor)
-            jngl.Draw("crap.png", 240, 100)
+        while not jngl.keyPressed(jngl.key.Any) and jngl.running():
+            jngl.updateInput()
+            jngl.scale(self.scaleFactor)
+            jngl.draw("crap.png", -160, -140)
             if self.music == None:
                 text = "Loading ..."
             else:
                 text = "Press any key"
-            jngl.Print(text, int(self.windowWidth / 2 - jngl.GetTextWidth(text) / 2), 400)
-            jngl.SwapBuffers()
+            jngl.print(text, int(-jngl.getTextWidth(text) / 2), 160)
+            jngl.swapBuffers()
             if self.music == None:
                 self.music = Music()
-                jnal.Load("dead.ogg")
-                jnal.Load("collect.ogg")
+                jngl.load("dead.ogg")
+                jngl.load("collect.ogg")
 
         self.highscore = 0
         if os.path.exists("highscore"):
@@ -198,15 +195,16 @@ class Game:
 
     def run(self):
         self.camera = 0
-        lastTime = jngl.Time()
+        lastTime = jngl.getTime()
         needDraw = True
         timePerStep = 0.01
         counter = 0
         fps = 0
-        while jngl.Running():
-            if jngl.Time() - lastTime > timePerStep:
+        while jngl.running():
+            if jngl.getTime() - lastTime > timePerStep:
                 lastTime += timePerStep
                 needDraw = True
+                jngl.updateInput()
                 self.music.step()
                 self.player.move(self)
                 self.level.checkStars(self.player)
@@ -221,29 +219,30 @@ class Game:
                     self.moveCamera = 0
                 self.camera += (self.moveCamera - self.camera) / 30
 
-                if jngl.KeyPressed('m'):
+                if jngl.keyPressed('m'):
                     self.music.togglePlaying()
-                if jngl.KeyPressed('j') and self.levelNr == 1:
+                if jngl.keyPressed('j') and self.levelNr == 1:
                     self.player.nonstopJump = not self.player.nonstopJump
-                if jngl.KeyPressed('r') and self.levelNr == 37:
+                if jngl.keyPressed('r') and self.levelNr == 37:
                     self.levelNr = 0
                     self.loadNextLevel()
 
             elif needDraw:
                 needDraw = False
 
-                jngl.Scale(self.scaleFactor)
-                jngl.PushMatrix()
-                jngl.Translate(0, int(self.camera))
+                jngl.scale(self.scaleFactor)
+                jngl.translate(-400, -240)
+                jngl.pushMatrix()
+                jngl.translate(0, int(self.camera))
                 self.level.draw()
                 self.level.drawHints()
                 self.player.draw()
-                jngl.PopMatrix()
+                jngl.popMatrix()
 
-                jngl.Print("#{1}  Score: {0}".format(self.level.getScore(), self.levelNr), 10, 10)
+                jngl.print("#{1}  Score: {0}".format(self.level.getScore(), self.levelNr), 10, 10)
 
                 text = "Total Score: {0}".format(self.totalScore)
-                jngl.Print(text, int(self.windowWidth - 10 - jngl.GetTextWidth(text)), 10)
+                jngl.print(text, int(self.windowWidth - 10 - jngl.getTextWidth(text)), 10)
 
                 self.music.draw()
 
@@ -254,18 +253,18 @@ class Game:
                         file.write(str(self.highscore))
                         file.close()
 
-                    jngl.Print("Your Highscore:\n{0: >4}".format(self.highscore), 580, 405)
+                    jngl.print("Your Highscore:\n{0: >4}".format(self.highscore), 580, 405)
 
-                fps += jngl.FPS() / 50
+                fps += jngl.getFPS() / 50
                 counter -= 1
                 if counter < 0:
                     counter = 50
-                    jngl.SetTitle("Tudi {0} - Highscore: {1} - FPS: {2}".format(self.version, self.highscore, int(fps)))
+                    jngl.setTitle("Tudi {0} - Highscore: {1} - FPS: {2}".format(self.version, self.highscore, int(fps)))
                     fps = 0
 
-                jngl.SwapBuffers()
+                jngl.swapBuffers()
             else:
-                jngl.Sleep(1)
+                jngl.sleep(1)
 
 game = Game()
 game.run()

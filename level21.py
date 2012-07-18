@@ -11,4 +11,4 @@ class Level(LevelBase):
         for star in self.stars:
             star.x += 30
     def drawHints(self):
-        jngl.Print("Green Stars are worth 5 points.", 310, 290)
+        jngl.print("Green Stars are worth 5 points.", 310, 290)

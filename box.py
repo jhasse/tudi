@@ -9,8 +9,8 @@ class Box:
         self.width = width
         self.height = height
     def draw(self):
-        jngl.SetColor(200, 200, 200)
-        jngl.DrawRect(self.x, self.y, self.width, self.height)
+        jngl.setColor(200, 200, 200)
+        jngl.drawRect(self.x, self.y, self.width, self.height)
     def checkCollision(self, player):
         self.x += self.xspeed
         self.y += self.yspeed

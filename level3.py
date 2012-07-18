@@ -10,5 +10,5 @@ class Level(LevelBase):
             for y in range(250, 430, 160):
                 self.stars.append(Star(x, y, "blue"))
     def drawHints(self):
-        jngl.Print("Blue stars are worth 10 points.", 180, 170)
-        jngl.Print("You can press M to turn off the music.", 160, 325)
+        jngl.print("Blue stars are worth 10 points.", 180, 170)
+        jngl.print("You can press M to turn off the music.", 160, 325)

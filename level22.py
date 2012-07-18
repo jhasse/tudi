@@ -28,4 +28,4 @@ class Level(LevelBase):
         if self.movingBox.x < 50:
             self.moveLeft = False
     def drawHints(self):
-        jngl.Print("Let's increase our score\nafter all this work!", 20, 220)
+        jngl.print("Let's increase our score\nafter all this work!", 20, 220)

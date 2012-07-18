@@ -12,4 +12,4 @@ class Level(LevelBase):
         for x in range(170, 770, 160):
             self.stars.append(Star(x, 400, "red"))
     def drawHints(self):
-        jngl.Print("GO -->", 700, 170)
+        jngl.print("GO -->", 700, 170)

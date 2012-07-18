@@ -14,5 +14,5 @@ class Level(LevelBase):
             self.stars.append(Star(x, 180))
         self.boxes = [Box(280, 250, 380, 50)]
     def drawHints(self):
-        jngl.Print("Jump onto this box.", 350, 320)
-        jngl.Print("Well done!", 400, -50)
+        jngl.print("Jump onto this box.", 350, 320)
+        jngl.print("Well done!", 400, -50)

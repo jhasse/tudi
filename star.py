@@ -1,5 +1,5 @@
 import jngl
-import jnal
+
 
 class Star:
     def __init__(self, x, y, color = "yellow"):
@@ -29,10 +29,10 @@ class Star:
         self.dead = False
         self.explodeTimeout = 0
     def explode(self):
-        jnal.Play("collect.ogg")
+        jngl.play("collect.ogg")
         self.exploding = True
     def draw(self):
-        flash = int(jngl.Time() * 300 % 200)
+        flash = int(jngl.getTime() * 300 % 200)
         if flash > 100:
             flash = 200 - flash
         red = self.red + flash
@@ -47,33 +47,33 @@ class Star:
 
         width = self.size
         height = self.size
-        jngl.PushMatrix()
-        jngl.Translate(self.x, self.y)
+        jngl.pushMatrix()
+        jngl.translate(self.x, self.y)
         if self.exploding:
-            jngl.SetColor(red, green, blue, 255 - self.explodeTimeout)
+            jngl.setColor(red, green, blue, 255 - self.explodeTimeout)
             width -= self.explodeTimeout / 2
             height -= self.explodeTimeout / 2
             distance = self.explodeTimeout / 3
-            jngl.DrawRect(-width / 6 - distance, -height / 6 - distance, width / 3, height / 3)
-            jngl.DrawRect(-width / 6 - distance, -height / 6 + distance, width / 3, height / 3)
-            jngl.DrawRect(-width / 6 + distance, -height / 6 + distance, width / 3, height / 3)
-            jngl.DrawRect(-width / 6 + distance, -height / 6 - distance, width / 3, height / 3)
-            jngl.SetFontColor(255, 255, 255, int(255 - self.explodeTimeout * 2.55))
-            jngl.Print("{0: >+3}".format(self.score), -23, int(-15 - self.explodeTimeout / 5))
-            jngl.SetFontColor(255, 255, 255, 255)
+            jngl.drawRect(-width / 6 - distance, -height / 6 - distance, width / 3, height / 3)
+            jngl.drawRect(-width / 6 - distance, -height / 6 + distance, width / 3, height / 3)
+            jngl.drawRect(-width / 6 + distance, -height / 6 + distance, width / 3, height / 3)
+            jngl.drawRect(-width / 6 + distance, -height / 6 - distance, width / 3, height / 3)
+            jngl.setFontColor(255, 255, 255, int(255 - self.explodeTimeout * 2.55))
+            jngl.print("{0: >+3}".format(self.score), -23, int(-15 - self.explodeTimeout / 5))
+            jngl.setFontColor(255, 255, 255, 255)
         else:
-            jngl.SetColor(255, 255, 255)
-            jngl.PushMatrix()
-            jngl.Rotate(jngl.Time() * 50 % 360)
-            jngl.DrawRect(-width / 2, -height / 2, width, height)
-            jngl.PopMatrix()
+            jngl.setColor(255, 255, 255)
+            jngl.pushMatrix()
+            jngl.rotate(jngl.getTime() * 50 % 360)
+            jngl.drawRect(-width / 2, -height / 2, width, height)
+            jngl.popMatrix()
 
-            jngl.SetColor(red, green, blue)
-            jngl.PushMatrix()
-            jngl.Rotate(-jngl.Time() * 50 % 360)
-            jngl.DrawRect(-width / 2, -height / 2, width, height)
-            jngl.PopMatrix()
-        jngl.PopMatrix()
+            jngl.setColor(red, green, blue)
+            jngl.pushMatrix()
+            jngl.rotate(-jngl.getTime() * 50 % 360)
+            jngl.drawRect(-width / 2, -height / 2, width, height)
+            jngl.popMatrix()
+        jngl.popMatrix()
     def checkCollision(self, player):
         if self.exploding:
             self.explodeTimeout += 1
