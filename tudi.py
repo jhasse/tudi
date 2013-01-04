@@ -72,7 +72,7 @@ class Player:
                 jngl.reset()
                 jngl.drawRect(-jngl.getWindowWidth()/2, -jngl.getWindowHeight()/2, jngl.getWindowWidth(), jngl.getWindowHeight())
                 jngl.popMatrix()
-            jngl.setColor(255, 255, 255)
+            jngl.setColor(255, 255, 255, 255)
             jngl.pushMatrix()
             jngl.translate(self.x, self.y)
             width = self.size / 2 - self.explodeTimeout / 4
@@ -88,7 +88,7 @@ class Player:
                 # Fade in level
                 jngl.setColor(0, 0, 0, int(self.explodeTimeout * 5.1))
                 jngl.drawRect(0, 0, self.windowWidth, self.windowHeight)
-            jngl.setColor(255, 255, 255)
+            jngl.setColor(255, 255, 255, 255)
             width = self.size
             height = self.size
             height -= self.yspeed * 3
@@ -138,7 +138,7 @@ class Music:
 
 class Game:
     def __init__(self):
-        self.version = "1.04"
+        self.version = "1.05"
         self.levelNr = 1
         self.totalScore = 0
         self.level = None

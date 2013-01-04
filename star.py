@@ -62,7 +62,7 @@ class Star:
             jngl.print("{0: >+3}".format(self.score), -23, int(-15 - self.explodeTimeout / 5))
             jngl.setFontColor(255, 255, 255, 255)
         else:
-            jngl.setColor(255, 255, 255)
+            jngl.setColor(255, 255, 255, 255)
             jngl.pushMatrix()
             jngl.rotate(jngl.getTime() * 50 % 360)
             jngl.drawRect(-width / 2, -height / 2, width, height)
