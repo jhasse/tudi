@@ -1,4 +1,6 @@
-﻿import jngl
+#!/usr/bin/env python3
+
+import jngl
 if not jngl.isOpenALInstalled():
     os.system("oalinst.exe")
 import os
