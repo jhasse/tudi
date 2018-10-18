@@ -140,16 +140,18 @@ class Music:
 
 class Game:
     def __init__(self):
-        self.version = "1.05"
+        self.version = "1.06"
         self.levelNr = 1
         self.totalScore = 0
         self.level = None
-        self.scaleFactor = 1
         self.windowWidth = 800
         self.windowHeight = 480
         self.player = Player(self)
-        jngl.showWindow("Tudi {0} - Copyright 2009 Jan Niklas Hasse - http://watteimdocht.de/tudi".format(self.version),
-                        int(self.windowWidth * self.scaleFactor), int(self.windowHeight * self.scaleFactor))
+        jngl.setScaleFactor(min((jngl.getDesktopWidth() - 200) / self.windowWidth,
+                                (jngl.getDesktopHeight() - 200) / self.windowHeight));
+        jngl.showWindow("Tudi {0} - Copyright 2009-2018 Jan Niklas Hasse - https://bixense.com".format(self.version),
+                        round(self.windowWidth * jngl.getScaleFactor()),
+                        round(self.windowHeight * jngl.getScaleFactor()))
         jngl.setBackgroundColor(0, 0, 0)
         jngl.setFont('victor-pixel.ttf')
         jngl.setFontSize(16)
@@ -160,7 +162,6 @@ class Game:
 
         while not jngl.keyPressed(jngl.key.Any) and jngl.running():
             jngl.updateInput()
-            jngl.scale(self.scaleFactor)
             jngl.draw("crap.png", -160, -140)
             if self.music == None:
                 text = "Loading ..."
@@ -232,7 +233,6 @@ class Game:
             elif needDraw:
                 needDraw = False
 
-                jngl.scale(self.scaleFactor)
                 jngl.translate(-400, -240)
                 jngl.pushMatrix()
                 jngl.translate(0, int(self.camera))
