@@ -269,4 +269,7 @@ class Game:
                 jngl.sleep(1)
 
 game = Game()
-game.run()
+try:
+    game.run()
+finally:
+    jngl.hideWindow()
