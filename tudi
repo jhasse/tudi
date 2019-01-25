@@ -162,7 +162,7 @@ class Game:
 
         while not jngl.keyPressed(jngl.key.Any) and jngl.running():
             jngl.updateInput()
-            jngl.draw("crap.png", -160, -140)
+            jngl.draw("crap", -160, -140)
             if self.music == None:
                 text = "Loading ..."
             else:
