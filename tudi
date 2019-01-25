@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import jngl
+import os
 if not jngl.isOpenALInstalled():
     os.system("oalinst.exe")
-import os
 
 class Player:
     def __init__(self, game):
