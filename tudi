@@ -152,7 +152,7 @@ class Game:
         jngl.showWindow("Tudi {0} - Copyright 2009-2018 Jan Niklas Hasse - https://bixense.com".format(self.version),
                         round(self.windowWidth * jngl.getScaleFactor()),
                         round(self.windowHeight * jngl.getScaleFactor()))
-        jngl.setBackgroundColor(0, 0, 0)
+        jngl.setBackgroundColor(jngl.Color(0, 0, 0))
         jngl.setFont('victor-pixel.ttf')
         jngl.setFontSize(16)
         jngl.setFontColor(255, 255, 255)
